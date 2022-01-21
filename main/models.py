@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class OrderingMixin(models.Model):
@@ -8,28 +9,45 @@ class OrderingMixin(models.Model):
         ordering = ['-id']
 
 
+User = get_user_model()
+
+
 class Profile(models.Model):
     """My profile info"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     occupation = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.CharField(
+        max_length=200, help_text="Describe yourself")
     image_url = models.URLField()
     bio = models.TextField()
-    contact_message = models.CharField(max_length=200)
+    contact_message = models.CharField(max_length=200, blank=True, null=True)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    website = models.URLField()
-    resume_download = models.URLField()
+    website = models.URLField(blank=True, null=True)
+    resume_download = models.URLField(
+        help_text="A link to download your resume from",  blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
 class Social(OrderingMixin, models.Model):
+
+    CLASSNAMES = (
+        ("fa fa-facebook", "Facebook Icon"),
+        ("fa fa-twitter", "Twitter Icon"),
+        ("fa fa-instagram", "Instagram Icon"),
+        ("fa fa-whatsapp", "Whatsapp Icon"),
+        ("fa fa-linkedin", "LinkedIn Icon"),
+        ("fa fa-github", "Github Icon"),
+    )
+
     """Social information"""
     name = models.CharField(max_length=20)
     url = models.URLField()
-    class_name = models.CharField(max_length=20)
+    class_name = models.CharField(
+        max_length=20, choices=CLASSNAMES, help_text="Icon to represent your social")
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name='social')
 
