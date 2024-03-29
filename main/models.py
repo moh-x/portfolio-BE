@@ -41,6 +41,7 @@ class Social(OrderingMixin, models.Model):
         ("fa fa-whatsapp", "Whatsapp Icon"),
         ("fa fa-linkedin", "LinkedIn Icon"),
         ("fa fa-github", "Github Icon"),
+        ("fa-brands fa-tiktok", "TikTok Icon"),
     )
 
     """Social information"""
